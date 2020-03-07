@@ -1,0 +1,3 @@
+﻿<spml:suspendRequest xmlns:spml="urn:oasis:names:tc:SPML:2:0" executionMode="synchronous" requestID="1234" returnData="everything">
+	<spml:psoID ID="01d0409c-1b14-424a-a982-5524dc0984fe" targetID="ADDS"/>
+</spml:suspendRequest>

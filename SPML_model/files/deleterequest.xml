@@ -1,0 +1,3 @@
+﻿<spml:deleteRequest xmlns:spml="urn:oasis:names:tc:SPML:2:0" executionMode="synchronous" requestID="1234">
+	<spml:psoID ID="fa046c5e-6aae-46ae-9199-abfe7c01f721" targetID="ADDS"/>
+</spml:deleteRequest>

@@ -5,4 +5,4 @@
 /.vs/AllTries
 **/bin/
 **/obj/
-
+/packages/
