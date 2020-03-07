@@ -1,0 +1,37 @@
+﻿<spml:modifyRequest xmlns:spml="urn:oasis:names:tc:SPML:2:0" executionMode="synchronous" requestID="524536" returnData="everything">
+    <spml:psoID ID="43952fd8-9e9c-40ba-bc70-0d7b7063df8d" targetID="ADDS"/>
+    <spml:modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="Rid" operation="replace">
+            <value></value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="PrefFirstName" operation="replace">
+            <value>Trump</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="LegalLastName" operation="replace">
+            <value>Beny</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="NameID" operation="replace">
+            <value>Trump.Beny@somewhere.ON.CA</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="RoleSponsor" operation="replace">
+            <value>role1,role2,role</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="Email" operation="replace">
+            <value>Trump.Beny@someplace.on.ca</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="LegalFirstName" operation="replace">
+            <value>Trump</value>
+        </modification>
+        <modification
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="PrefLastName" operation="replace">
+            <value>Beny</value>
+        </modification>
+    </spml:modification>
+</spml:modifyRequest>

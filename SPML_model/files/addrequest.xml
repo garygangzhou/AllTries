@@ -1,0 +1,34 @@
+﻿<addRequest xmlns:spml="urn:oasis:names:tc:SPML:2:0" executionMode="synchronous" requestID="250728" returnData="everything">
+    <spml:psoID ID="43952fd8-9e9c-40ba-bc70-0d7b7063df8d" targetID="ADDS"/>
+    <spml:data>
+        <attr xmlns="urn:oasis:names:tc:DSML:2:0:core" name="Rid"><value></value></attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="PrefFirstName">
+            <value>John</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="LegalLastName">
+            <value>Smith</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="NameID">
+            <value>John.Smith@SOMEWHERE.ON.CA</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="Email">
+            <value>John.Smith@someplaceelse.on.ca</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="LegalFirstName">
+            <value>John</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:DSML:2:0:core" name="PrefLastName">
+            <value>Smith</value>
+        </attr>
+        <attr
+            xmlns="urn:oasis:names:tc:SPML:2:0:core" name="RoleSponsor">
+            <value>app1role,app2role,app3role</value>
+        </attr>
+    </spml:data>
+</addRequest>
