@@ -3,17 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SPML_model
+namespace SPMLParser
 {
-    class Program
+    public class Program
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         static void Main(string[] args)
         {
             Program p = new Program();
             //read messages from text files
             List<string> messages = p.GetMessages();
-            log.Info($"Find {messages.Count} messages");
+            Logger.Log.Info($"Find {messages.Count} messages");
 
             List<SPMLMessage> spmlMessages = new List<SPMLMessage>();
             foreach(string msg in messages)

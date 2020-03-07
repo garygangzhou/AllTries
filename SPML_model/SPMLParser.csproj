@@ -46,8 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="Model\SPMLMessage.cs" />
-    <Compile Include="Model\SPMLMessageParser.cs" />
+    <Compile Include="SPMLMessageParser.cs" />
     <Compile Include="Model\SPML_AddRequest.cs" />
     <Compile Include="Model\SPML_DeleteRequest.cs" />
     <Compile Include="Model\SPML_ModifyRequest.cs" />

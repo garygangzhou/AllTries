@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Xml;
+using SPMLParser.Model;
 
-namespace SPMLParser.Model
+namespace SPMLParser
 {
     public static class SPMLMessageParser
     {
         readonly static string regExp = @"[^a-zA-Z]*([a-zA-Z]+Request$)";
-        //readonly static string regExp = @"[a-zA-Z ]*[^a-zA-Z]*([a-zA-Z]+Request$)";
+        
         public static SPMLMessage Parse2(string messageXMLstring)
         {
             //load xml message
@@ -23,7 +24,7 @@ namespace SPMLParser.Model
                 return new SPML_UnknownRequest() { Message = messageXMLstring };
             }
             string requestName = matches[0].Groups[1].Value;
-            System.Diagnostics.Debug.WriteLine($"node name: {root.Name}, requestname: {requestName}");
+            Logger.Log.Debug($"node name: {root.Name}, requesttype: {requestName}");
 
             switch (requestName)
             {
