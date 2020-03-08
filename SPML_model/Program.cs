@@ -2,49 +2,35 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SPMLParser
 {
     public class Program
     {
+        string filefolder = "files";
+        readonly string[] files = new string[] {
+                "addrequest.xml",
+                "addrequest2.xml",
+                "deleterequest.xml",
+                "modifyrequest.xml",
+                "modifyrequest2.xml",
+                "resumerequest.xml",
+                "suspendrequest.xml"
+        };
+       
         static void Main(string[] args)
         {
             Program p = new Program();
-            //read messages from text files
-            List<string> messages = p.GetMessages();
-            Logger.Log.Info($"Find {messages.Count} messages");
+            p.ProcessMessages();
 
-            List<SPMLMessage> spmlMessages = new List<SPMLMessage>();
-            foreach(string msg in messages)
-            {
-                SPMLMessage amsg = SPMLMessageParser.Parse2(msg);
-                spmlMessages.Add( amsg );
-
-                //if ( amsg is SPML_AddRequest)
-                //{
-                //    SPML_AddRequest ar = amsg as SPML_AddRequest;
-                //    string psoid = ar.PSOID;
-                //    Dictionary<string, string> requestdata = ar.Data;
-                //}                
-            }
 
            // Console.WriteLine("Click Enter to terminate");
           //  Console.ReadLine();
         }
 
         private List<string> GetMessages()
-        {
-            string filefolder = "files";
-            List<String> files = new List<string> {
-                "addrequest.xml",
-                "addrequest2.xml",
-                "deleterequest.xml", 
-                "modifyrequest.xml", 
-                "modifyrequest2.xml",
-                "resumerequest.xml", 
-                "suspendrequest.xml"
-            };
-
+        {                    
             List<string> msgs = new List<string>();
             foreach (string file in files)
             {
@@ -55,6 +41,37 @@ namespace SPMLParser
                 }
             }
             return msgs;
-        }       
+        }
+
+        private string[] GetMessages2()
+        {
+            string[] msgs = new string[files.Length];
+            Parallel.For(0, files.Length, (i) => {
+                if (File.Exists(Path.Combine(filefolder, files[i])))
+                {
+                    string requestStr = File.ReadAllText(Path.Combine(filefolder, files[i]));
+                    msgs[i] = requestStr;
+                }
+            });
+            return msgs;
+        }
+
+        private SPMLMessage[] ProcessMessages()
+        {
+            //string[] msgs = new string[files.Length];
+            SPMLMessage[] spmlMessages = new SPMLMessage[files.Length];
+            Parallel.For(0, files.Length, (i) => {
+                if (File.Exists(Path.Combine(filefolder, files[i])))
+                {
+                    string requestStr = File.ReadAllText(Path.Combine(filefolder, files[i]));                   
+                    if ( !string.IsNullOrEmpty(requestStr))
+                    {
+                        SPMLMessage amsg = SPMLMessageParser.Parse2(requestStr);
+                        spmlMessages[i] = amsg;
+                    }
+                }
+            });
+            return spmlMessages;
+        }
     }
 }
