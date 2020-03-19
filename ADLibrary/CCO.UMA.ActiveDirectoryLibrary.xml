@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GZActiveDirectoryLibrary</name>
+    </assembly>
+    <members>
+        <member name="T:GZ.ActiveDirectoryLibrary.ADObject">
+            <summary>
+            An active directory object
+            </summary>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.ADObject.#ctor(GZ.ActiveDirectoryLibrary.ADObjectTypes,System.String,System.String,System.Guid)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="name"></param>
+            <param name="path"></param>
+            <param name="guid"></param>
+        </member>
+        <member name="T:GZ.ActiveDirectoryLibrary.Comparer.ADObjectComparer">
+            <summary>
+            Implements IComparer(Of ADObject) interface
+            </summary>
+            <remarks></remarks>
+        </member>
+        <member name="T:GZ.ActiveDirectoryLibrary.Exceptions.AccessDeniedException">
+            <summary>
+            AccessDeniedException
+            </summary>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.Exceptions.AccessDeniedException.#ctor(System.Exception)">
+            <summary>
+            AccessDeniedException constructor
+            </summary>
+            <param name="ex"></param>
+        </member>
+        <member name="T:GZ.ActiveDirectoryLibrary.GroupManagement.ADGroup">
+            <summary>
+            ADGroup class inherit ADOBject. This class represents a group
+            </summary>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.GroupManagement.ADGroup.#ctor(System.String,System.String,System.Guid)">
+            <summary>
+            present a group
+            </summary>
+            <param name="name"></param>
+            <param name="path"></param>
+            <param name="groupGuid"></param>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.EscapeLogonChrs(System.String)">
+            <summary>
+            Escapes invalid logon Character
+            </summary>
+            <param name="logon"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.SetAccountOptions(GZ.ActiveDirectoryLibrary.UserManagement.Account,System.DirectoryServices.DirectoryEntry)">
+            <summary>
+            Helper function to set Account options atrributes
+            </summary>
+            <param name="user"></param>
+            <param name="de"></param>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.SetUserCannotChangePassword(System.Boolean,System.DirectoryServices.DirectoryEntry)">
+            <summary>
+            Set the user cannot change password attribute on adirectory entry object
+            </summary>
+            <param name="cannotChangePwd"></param>
+            <param name="userde"></param>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.AuthenticateUser(System.String,System.String)">
+            <summary>
+            Returns true if authentication is successful
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.ResetPassword(System.String,System.String)">
+            <summary>
+            Resets user password
+            </summary>
+            <param name="guid"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.ChangePassword(System.String,System.String,System.String)">
+            <summary>
+            Changes user password
+            </summary>
+            <param name="userGuid"></param>
+            <param name="oldPassword"></param>
+            <param name="newPassword"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.SearchAccountList(GZ.ActiveDirectoryLibrary.UserManagement.SearchAccountCriteria)">
+            <summary>
+            Searches user based on search criteria parameter
+            </summary>
+            <param name="criteria"></param>
+            <returns>List of Account objects</returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.SearchAccount(GZ.ActiveDirectoryLibrary.UserManagement.SearchAccountCriteria,System.Collections.Generic.List{System.Guid})">
+            <summary>
+            Searches user based on search criteria parameter
+            </summary>
+            <param name="criteria"></param>
+            <returns>List of Account objects</returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetAccountByCommonName(System.String,System.String,System.String)">
+            <summary>
+            Gets account from name
+            </summary>
+            <param name="firstName"></param>
+            <param name="init"></param>
+            <param name="lastName"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetAccount(System.String)">
+            <summary>
+            Gets Account by username
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetAccountByGuid(System.String)">
+            <summary>
+            Gets Account from guid
+            </summary>
+            <param name="guid"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetAccountByDistinguishedName(System.String)">
+            <summary>
+            Gets Account from the user's fully distinguished name
+            </summary>
+            <param name="distinguishedName"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.AddAccount(GZ.ActiveDirectoryLibrary.UserManagement.Account,System.String,System.String)">
+            <summary>
+            Add user account
+            </summary>
+            <param name="user"></param>
+            <param name="containerFullPath"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.UpdateAccount(GZ.ActiveDirectoryLibrary.UserManagement.Account)">
+            <summary>
+            Update user account
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.DeleteUser(System.String)">
+            <summary>
+            Deletes user account
+            </summary>
+            <param name="userGuid"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.UnlockAccount(System.String)">
+            <summary>
+            Unlocks user account
+            </summary>
+            <param name="userGuid"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.EnableAccount(System.String)">
+            <summary>
+            Enables user account
+            </summary>
+            <param name="userGuid"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.DisableAccount(System.String)">
+            <summary>
+            Disables user account
+            </summary>
+            <param name="userGuid"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.IsUserInGroup(System.String,System.String)">
+            <summary>
+            Determines if User is a member of the group
+            </summary>
+            <param name="userGuid"></param>
+            <param name="groupName"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetUpnSuffixes">
+            <summary>
+            Gets all available UPN suffixes from the domain controller.
+            </summary>
+            <returns>A list of UPN suffixes.</returns>
+            <remarks>
+            https://social.microsoft.com/Forums/en-US/7183c252-3b57-4f32-8cea-c2622bb82d14/how-to-get-list-all-upn-suffixes-in-c-code?forum=crm
+            https://social.msdn.microsoft.com/forums/vstudio/en-US/d3e4cc17-9391-4d55-8416-4c952a01f762/get-upn-suffix-list-from-active-directory
+            </remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GetGroups">
+            <summary>
+            Returns all the groups in AD
+            </summary>
+            <returns>Array of Group distinguished name</returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.AddUserToGroup(System.String,System.String)">
+            <summary>
+            Adds user to group
+            </summary>
+            <param name="userGuid">guid of user to add</param>
+            <param name="groupName">name of the group</param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.RemoveUserFromGroup(System.String,System.String)">
+            <summary>
+            Removes User From Group
+            </summary>
+            <param name="userGuid">guid of the user</param>
+            <param name="groupName">name of the group</param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:GZ.ActiveDirectoryLibrary.UserManagement.AccountManager.GroupExists(System.String)">
+            <summary>
+            Determines if group already exist in AD
+            </summary>
+            <param name="groupName">Name of the Group</param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+    </members>
+</doc>

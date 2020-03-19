@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rabbitmq_Receiver", "Rabbit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPMLParser", "SPML_model\SPMLParser.csproj", "{15CE5488-4A4C-4728-88D5-52C52492666B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiveDirectoryLibrary", "ADLibrary\ActiveDirectoryLibrary.csproj", "{897E2A56-F5E5-087A-2F54-3200CB5BB92D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{15CE5488-4A4C-4728-88D5-52C52492666B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15CE5488-4A4C-4728-88D5-52C52492666B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15CE5488-4A4C-4728-88D5-52C52492666B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
