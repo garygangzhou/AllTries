@@ -518,9 +518,8 @@ namespace GZ.ActiveDirectoryLibrary
             var result = deSearch.FindOne();
             string path = null;
             if (!(result == default))
-            {
-                var argproperties = result.Properties;
-                path = GetADPropertyValue("distinguishedName", ref argproperties);
+            {                
+                path = GetADPropertyValue("distinguishedName", result.Properties);
             }
 
             return path;
@@ -584,7 +583,7 @@ namespace GZ.ActiveDirectoryLibrary
             }
         }
 
-        protected string GetADPropertyValue(string key, ref ResultPropertyCollection properties)
+        protected string GetADPropertyValue(string key, ResultPropertyCollection properties)
         {
             if (properties.Contains(key) == true && properties[key].Count > 0)
             {
@@ -594,7 +593,7 @@ namespace GZ.ActiveDirectoryLibrary
             return "";
         }
 
-        protected string GetADPropertyMultiValue(string key, ref ResultPropertyCollection properties)
+        protected string GetADPropertyMultiValue(string key, ResultPropertyCollection properties)
         {
             string value = "";
             if (properties.Contains(key) == true)

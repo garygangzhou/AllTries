@@ -37,12 +37,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return deSearch.FindOne();
         }
 
-        /// <summary>
-        /// Escapes invalid logon Character
-        /// </summary>
-        /// <param name="logon"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
         private string EscapeLogonChrs(string logon)
         {
             foreach (char c in Constants.LOGON_ESCAPE_CHRS.ToCharArray())
@@ -50,12 +44,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return logon;
         }
 
-        /// <summary>
-        /// Helper function to set Account options atrributes
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="de"></param>
-        /// <remarks></remarks>
         private void SetAccountOptions(Account user, DirectoryEntry de)
         {
             int exp = Conversions.ToInteger(de.Properties["userAccountControl"].Value);
@@ -117,12 +105,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             // SetUserCannotChangePassword(user.AccountOptionUserCannotChangePassword, de)
         }
 
-        /// <summary>
-        /// Set the user cannot change password attribute on adirectory entry object
-        /// </summary>
-        /// <param name="cannotChangePwd"></param>
-        /// <param name="userde"></param>
-        /// <remarks></remarks>
         private void SetUserCannotChangePassword(bool cannotChangePwd, DirectoryEntry userde)
         {
             // Code from http://www.eggheadcafe.com/conversation.aspx?messageid=29773590&threadid=29773576
@@ -314,10 +296,10 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
         {
             DirectoryEntry de;
             var user = new Account();
-            var propertiesToLoad = new[] { "objectGUID", "sAMAccountName", "userPrincipalName", "distinguishedName", "givenName", "sn", 
-                "initials", "displayName", "description", "physicalDeliveryOfficeName", "telephoneNumber", "otherTelephone", "mail", 
-                "wWWHomePage", "url", "streetAddress", "postOfficeBox", "l", "st", "postalCode", "co", "c", "ou", "homePhone", 
-                "otherHomePhone", "pager", "otherPager", "mobile", "otherMobile", "facsimileTelephoneNumber", "otherFacsimileTelephoneNumber", 
+            var propertiesToLoad = new[] { "objectGUID", "sAMAccountName", "userPrincipalName", "distinguishedName", "givenName", "sn",
+                "initials", "displayName", "description", "physicalDeliveryOfficeName", "telephoneNumber", "otherTelephone", "mail",
+                "wWWHomePage", "url", "streetAddress", "postOfficeBox", "l", "st", "postalCode", "co", "c", "ou", "homePhone",
+                "otherHomePhone", "pager", "otherPager", "mobile", "otherMobile", "facsimileTelephoneNumber", "otherFacsimileTelephoneNumber",
                 "ipPhone", "otherIpPhone", "info", "title", "department", "company", "manager", "userAccountControl",
                 "msDS-User-Account-Control-Computed", "MemberOf", "whenCreated", "creator", "pwdLastSet" };
 
@@ -329,80 +311,45 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             if (!(result == default))
             {
                 user.Guid = result.GetDirectoryEntry().Guid.ToString();
-                user.Guid = result.GetDirectoryEntry().Guid.ToString();
-                var argproperties = result.Properties;
-                user.LogonName = GetADPropertyValue("sAMAccountName", ref argproperties);
-                var argproperties1 = result.Properties;
-                user.UPN = GetADPropertyValue("userPrincipalName", ref argproperties1);
-                var argproperties2 = result.Properties;
-                user.FirstName = GetADPropertyValue("givenName", ref argproperties2);
-                var argproperties3 = result.Properties;
-                user.LastName = GetADPropertyValue("sn", ref argproperties3);
-                var argproperties4 = result.Properties;
-                user.MiddleInitial = GetADPropertyValue("initials", ref argproperties4);
-                var argproperties5 = result.Properties;
-                user.Phone = GetADPropertyValue("telephoneNumber", ref argproperties5);
-                var argproperties6 = result.Properties;
-                user.PhoneOther = GetADPropertyMultiValue("otherTelephone", ref argproperties6);
-                var argproperties7 = result.Properties;
-                user.Email = GetADPropertyValue("mail", ref argproperties7);
-                var argproperties8 = result.Properties;
-                user.Description = GetADPropertyValue("description", ref argproperties8);
-                var argproperties9 = result.Properties;
-                user.Office = GetADPropertyValue("physicalDeliveryOfficeName", ref argproperties9);
-                var argproperties10 = result.Properties;
-                user.WebPage = GetADPropertyValue("wWWHomePage", ref argproperties10);
-                var argproperties11 = result.Properties;
-                user.WebPageOther = GetADPropertyMultiValue("url", ref argproperties11);
-                var argproperties12 = result.Properties;
-                user.DisplayName = GetADPropertyValue("displayName", ref argproperties12);
-                var argproperties13 = result.Properties;
-                user.StreetName = GetADPropertyValue("streetAddress", ref argproperties13);
-                var argproperties14 = result.Properties;
-                user.PostOfficeBox = GetADPropertyValue("postOfficeBox", ref argproperties14);
-                var argproperties15 = result.Properties;
-                user.City = GetADPropertyValue("l", ref argproperties15);
-                var argproperties16 = result.Properties;
-                user.Province = GetADPropertyValue("st", ref argproperties16);
-                var argproperties17 = result.Properties;
-                user.PostalCode = GetADPropertyValue("postalCode", ref argproperties17);
-                var argproperties18 = result.Properties;
-                user.Country = GetADPropertyValue("co", ref argproperties18);
-                var argproperties19 = result.Properties;
-                user.CountryAbbr = GetADPropertyValue("c", ref argproperties19);
-                var argproperties20 = result.Properties;
-                user.HomePhone = GetADPropertyValue("homePhone", ref argproperties20);
-                var argproperties21 = result.Properties;
-                user.HomePhoneOther = GetADPropertyMultiValue("otherHomePhone", ref argproperties21);
-                var argproperties22 = result.Properties;
-                user.Pager = GetADPropertyValue("pager", ref argproperties22);
-                var argproperties23 = result.Properties;
-                user.PagerOther = GetADPropertyMultiValue("otherPager", ref argproperties23);
-                var argproperties24 = result.Properties;
-                user.Mobile = GetADPropertyValue("mobile", ref argproperties24);
-                var argproperties25 = result.Properties;
-                user.MobileOther = GetADPropertyMultiValue("otherMobile", ref argproperties25);
-                var argproperties26 = result.Properties;
-                user.Fax = GetADPropertyValue("facsimileTelephoneNumber", ref argproperties26);
-                var argproperties27 = result.Properties;
-                user.FaxOther = GetADPropertyMultiValue("otherFacsimileTelephoneNumber", ref argproperties27);
-                var argproperties28 = result.Properties;
-                user.IpPhone = GetADPropertyValue("ipPhone", ref argproperties28);
-                var argproperties29 = result.Properties;
-                user.IpPhoneOther = GetADPropertyMultiValue("otherIpPhone", ref argproperties29);
-                var argproperties30 = result.Properties;
-                user.Note = GetADPropertyValue("info", ref argproperties30);
-                var argproperties31 = result.Properties;
-                user.Title = GetADPropertyValue("title", ref argproperties31);
-                var argproperties32 = result.Properties;
-                user.Department = GetADPropertyValue("department", ref argproperties32);
-                var argproperties33 = result.Properties;
-                user.Company = GetADPropertyValue("company", ref argproperties33);
-                var argproperties34 = result.Properties;
-                user.Manager = GetADPropertyValue("manager", ref argproperties34);
+                user.LogonName = GetADPropertyValue("sAMAccountName", result.Properties);
+                user.UPN = GetADPropertyValue("userPrincipalName", result.Properties);
+                user.FirstName = GetADPropertyValue("givenName", result.Properties);
+                user.LastName = GetADPropertyValue("sn", result.Properties);
+                user.MiddleInitial = GetADPropertyValue("initials", result.Properties);
+                user.Phone = GetADPropertyValue("telephoneNumber", result.Properties);
+                user.PhoneOther = GetADPropertyMultiValue("otherTelephone", result.Properties);
+                user.Email = GetADPropertyValue("mail", result.Properties);
+                user.Description = GetADPropertyValue("description", result.Properties);
+                user.Office = GetADPropertyValue("physicalDeliveryOfficeName", result.Properties);
+                user.WebPage = GetADPropertyValue("wWWHomePage", result.Properties);
+                user.WebPageOther = GetADPropertyMultiValue("url", result.Properties);
+                user.DisplayName = GetADPropertyValue("displayName", result.Properties);
+                user.StreetName = GetADPropertyValue("streetAddress", result.Properties);
+                user.PostOfficeBox = GetADPropertyValue("postOfficeBox", result.Properties);
+                user.City = GetADPropertyValue("l", result.Properties);
+                user.Province = GetADPropertyValue("st", result.Properties);
+                user.PostalCode = GetADPropertyValue("postalCode", result.Properties);
+                user.Country = GetADPropertyValue("co", result.Properties);
+                user.CountryAbbr = GetADPropertyValue("c", result.Properties);
+                user.HomePhone = GetADPropertyValue("homePhone", result.Properties);
+                user.HomePhoneOther = GetADPropertyMultiValue("otherHomePhone", result.Properties);
+                user.Pager = GetADPropertyValue("pager", result.Properties);
+                user.PagerOther = GetADPropertyMultiValue("otherPager", result.Properties);
+                user.Mobile = GetADPropertyValue("mobile", result.Properties);
+                user.MobileOther = GetADPropertyMultiValue("otherMobile", result.Properties);
+                user.Fax = GetADPropertyValue("facsimileTelephoneNumber", result.Properties);
+                user.FaxOther = GetADPropertyMultiValue("otherFacsimileTelephoneNumber", result.Properties);
+                user.IpPhone = GetADPropertyValue("ipPhone", result.Properties);
+                user.IpPhoneOther = GetADPropertyMultiValue("otherIpPhone", result.Properties);
+                user.Note = GetADPropertyValue("info", result.Properties);
+                user.Title = GetADPropertyValue("title", result.Properties);
+                user.Department = GetADPropertyValue("department", result.Properties);
+                user.Company = GetADPropertyValue("company", result.Properties);
+                user.Manager = GetADPropertyValue("manager", result.Properties);
+
                 string regExp = "CN=([^,]+),(.*)";
-                var argproperties35 = result.Properties;
-                string dn = GetADPropertyValue("distinguishedName", ref argproperties35);
+                string dn = GetADPropertyValue("distinguishedName", result.Properties);
+
                 dn = dn.Replace(@"\,", " ");
                 var match = Regex.Match(dn, regExp, RegexOptions.IgnoreCase);
                 if (match.Success)
@@ -431,24 +378,19 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     var managerResult = managerDeSearch.FindOne();
                     if (!(managerResult == default))
                     {
-                        var argproperties36 = managerResult.Properties;
-                        user.ManagerName = GetADPropertyValue("displayName", ref argproperties36);
+                        user.ManagerName = GetADPropertyValue("displayName", managerResult.Properties);
                     }
                 }
 
-                var argproperties37 = result.Properties;
-                string whenCreated = GetADPropertyValue("whenCreated", ref argproperties37);
+                string whenCreated = GetADPropertyValue("whenCreated", result.Properties);
                 if (!string.IsNullOrEmpty(whenCreated))
                 {
                     user.CreatedOn = Conversions.ToDate(whenCreated).ToLocalTime();
                 }
 
-                var argproperties38 = result.Properties;
-                user.CreatedBy = GetADPropertyValue("creator", ref argproperties38);
-                ;
+                user.CreatedBy = GetADPropertyValue("creator", result.Properties);
 
-                var argproperties39 = result.Properties;
-                user.PasswordLastChanged = Utility.ConvertFromADDateFormat(long.Parse(GetADPropertyValue("pwdLastSet", ref argproperties39)));
+                user.PasswordLastChanged = Utility.ConvertFromADDateFormat(long.Parse(GetADPropertyValue("pwdLastSet", result.Properties)));
                 /* 
                 #error Cannot convert AssignmentStatementSyntax - see comment for details
                                 Cannot convert AssignmentStatementSyntax, System.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
@@ -464,11 +406,11 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                                    at ICSharpCode.CodeConverter.CSharp.CommentConvertingMethodBodyVisitor.<DefaultVisitInnerAsync>d__3.MoveNext()
 
                                 Input:
-                                                user.PasswordLastChanged = Global.GZ.ActiveDirectoryLibrary.Utility.ConvertFromADDateFormat(CLng(MyBase.GetADPropertyValue("pwdLastSet", result.Properties)))
+                                                user.PasswordLastChanged = Global.CCO.ActiveDirectoryLibrary.Utility.ConvertFromADDateFormat(CLng(MyBase.GetADPropertyValue("pwdLastSet", result.Properties)))
 
                 */
-                var argproperties40 = result.Properties;
-                user.PhoneOther = GetADPropertyMultiValue("otherTelephone", ref argproperties40);
+
+                user.PhoneOther = GetADPropertyMultiValue("otherTelephone", result.Properties);
                 if (result.Properties.Contains("memberOf") == true)
                 {
                     user.MemberOf = Utility.GetGroupNameFromDN(Utility.ConvertMultiValuedToStringArray(result.Properties["memberOf"]));
@@ -478,8 +420,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 // account options
                 int exp = Conversions.ToInteger(result.Properties["userAccountControl"][0]);
 
-                // URS-18: ISAAC-Users account are getting locked in AD but their account in UMA shows unlocked. 
-                // 
                 // Use "msDS-User-Account-Control-Computed" property instead of "userAccountControl" to determine locked accounts
                 // The "msDS-User-Account-Control-Computed" is only available in Windows 2003 or later                
                 int expComputed = -1;
@@ -645,13 +585,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     }
             }
         }
-        /// <summary>
-        /// Returns true if authentication is successful
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool AuthenticateUser(string userName, string password)
         {
             string ldapPath = "LDAP://" + DomainControllerAddress;
@@ -683,13 +617,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return false;
         }
-        /// <summary>
-        /// Resets user password
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <param name="newPassword"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool ResetPassword(string userGuid, string newPassword)
         {
             try
@@ -721,14 +649,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return false;
         }
-        /// <summary>
-        /// Changes user password
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <param name="oldPassword"></param>
-        /// <param name="newPassword"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool ChangePassword(string userGuid, string oldPassword, string newPassword)
         {
             try
@@ -753,12 +674,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return false;
         }
 
-        /// <summary>
-        /// Searches user based on search criteria parameter
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns>List of Account objects</returns>
-        /// <remarks></remarks>
         public List<Account> SearchAccountList(SearchAccountCriteria criteria)
         {
             SearchResultCollection results = null;
@@ -815,10 +730,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 // set Properties to load
                 var propertiesToLoad = new[] { "sAMAccountName", "givenName", "sn", "initials", "displayName", "distinguishedName" };
 
-
-
-
-
                 deSearch.PropertiesToLoad.AddRange(propertiesToLoad);
 
                 // set page size
@@ -829,18 +740,13 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     foreach (SearchResult result in results)
                     {
                         var user = new Account();
-                        var argproperties = result.Properties;
-                        user.LogonName = GetADPropertyValue("sAMAccountName", ref argproperties);
-                        var argproperties1 = result.Properties;
-                        user.FirstName = GetADPropertyValue("givenName", ref argproperties1);
-                        var argproperties2 = result.Properties;
-                        user.LastName = GetADPropertyValue("sn", ref argproperties2);
-                        var argproperties3 = result.Properties;
-                        user.MiddleInitial = GetADPropertyValue("initials", ref argproperties3);
-                        var argproperties4 = result.Properties;
-                        user.DisplayName = GetADPropertyValue("displayName", ref argproperties4);
-                        var argproperties5 = result.Properties;
-                        user.DistinguishedName = GetADPropertyValue("distinguishedName", ref argproperties5);
+
+                        user.LogonName = GetADPropertyValue("sAMAccountName", result.Properties);
+                        user.FirstName = GetADPropertyValue("givenName", result.Properties);
+                        user.LastName = GetADPropertyValue("sn", result.Properties);
+                        user.MiddleInitial = GetADPropertyValue("initials", result.Properties);
+                        user.DisplayName = GetADPropertyValue("displayName", result.Properties);
+                        user.DistinguishedName = GetADPropertyValue("distinguishedName", result.Properties);
                         users.Add(user);
                     }
                 }
@@ -863,13 +769,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return null;
         }
 
-
-        /// <summary>
-        /// Searches user based on search criteria parameter
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns>List of Account objects</returns>
-        /// <remarks></remarks>
         public List<Account> SearchAccount(SearchAccountCriteria criteria, List<Guid> guids)
         {
             var results = default(SearchResultCollection);
@@ -966,47 +865,12 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 deSearch.Sort = deSort;
 
                 // set Properties to load
-                var propertiesToLoad = new[] { "objectGUID", "sAMAccountName", "userPrincipalName", "givenName", "sn", "initials", "displayName", "description", "physicalDeliveryOfficeName", "telephoneNumber", "otherTelephone", "mail", "wWWHomePage", "url", "streetAddress", "postOfficeBox", "l", "st", "postalCode", "co", "distinguishedName", "homePhone", "otherHomePhone", "pager", "otherPager", "mobile", "otherMobile", "facsimileTelephoneNumber", "otherFacsimileTelephoneNumber", "ipPhone", "otherIpPhone", "info", "title", "department", "company", "manager", "userAccountControl", "msDS-User-Account-Control-Computed", "MemberOf", "whenCreated", "creator", "pwdLastSet" };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                var propertiesToLoad = new[] { "objectGUID", "sAMAccountName", "userPrincipalName", "givenName", "sn", "initials",
+                    "displayName", "description", "physicalDeliveryOfficeName", "telephoneNumber", "otherTelephone", "mail",
+                    "wWWHomePage", "url", "streetAddress", "postOfficeBox", "l", "st", "postalCode", "co", "distinguishedName",
+                    "homePhone", "otherHomePhone", "pager", "otherPager", "mobile", "otherMobile", "facsimileTelephoneNumber",
+                    "otherFacsimileTelephoneNumber", "ipPhone", "otherIpPhone", "info", "title", "department", "company", "manager",
+                    "userAccountControl", "msDS-User-Account-Control-Computed", "MemberOf", "whenCreated", "creator", "pwdLastSet" };
 
                 deSearch.PropertiesToLoad.AddRange(propertiesToLoad);
 
@@ -1024,76 +888,43 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     {
                         var user = new Account();
                         user.Guid = result.GetDirectoryEntry().Guid.ToString();
-                        var argproperties = result.Properties;
-                        user.LogonName = GetADPropertyValue("sAMAccountName", ref argproperties);
-                        var argproperties1 = result.Properties;
-                        user.UPN = GetADPropertyValue("userPrincipalName", ref argproperties1);
-                        var argproperties2 = result.Properties;
-                        user.FirstName = GetADPropertyValue("givenName", ref argproperties2);
-                        var argproperties3 = result.Properties;
-                        user.LastName = GetADPropertyValue("sn", ref argproperties3);
-                        var argproperties4 = result.Properties;
-                        user.MiddleInitial = GetADPropertyValue("initials", ref argproperties4);
-                        var argproperties5 = result.Properties;
-                        user.Phone = GetADPropertyValue("telephoneNumber", ref argproperties5);
-                        var argproperties6 = result.Properties;
-                        user.PhoneOther = GetADPropertyMultiValue("otherTelephone", ref argproperties6);
-                        var argproperties7 = result.Properties;
-                        user.Email = GetADPropertyValue("mail", ref argproperties7);
-                        var argproperties8 = result.Properties;
-                        user.Description = GetADPropertyValue("description", ref argproperties8);
-                        var argproperties9 = result.Properties;
-                        user.Office = GetADPropertyValue("physicalDeliveryOfficeName", ref argproperties9);
-                        var argproperties10 = result.Properties;
-                        user.WebPage = GetADPropertyValue("wWWHomePage", ref argproperties10);
-                        var argproperties11 = result.Properties;
-                        user.WebPageOther = GetADPropertyMultiValue("url", ref argproperties11);
-                        var argproperties12 = result.Properties;
-                        user.DisplayName = GetADPropertyValue("displayName", ref argproperties12);
-                        var argproperties13 = result.Properties;
-                        user.StreetName = GetADPropertyValue("streetAddress", ref argproperties13);
-                        var argproperties14 = result.Properties;
-                        user.PostOfficeBox = GetADPropertyValue("postOfficeBox", ref argproperties14);
-                        var argproperties15 = result.Properties;
-                        user.City = GetADPropertyValue("l", ref argproperties15);
-                        var argproperties16 = result.Properties;
-                        user.Province = GetADPropertyValue("st", ref argproperties16);
-                        var argproperties17 = result.Properties;
-                        user.PostalCode = GetADPropertyValue("postalCode", ref argproperties17);
-                        var argproperties18 = result.Properties;
-                        user.Country = GetADPropertyValue("co", ref argproperties18);
-                        var argproperties19 = result.Properties;
-                        user.HomePhone = GetADPropertyValue("homePhone", ref argproperties19);
-                        var argproperties20 = result.Properties;
-                        user.HomePhoneOther = GetADPropertyMultiValue("otherHomePhone", ref argproperties20);
-                        var argproperties21 = result.Properties;
-                        user.Pager = GetADPropertyValue("pager", ref argproperties21);
-                        var argproperties22 = result.Properties;
-                        user.PagerOther = GetADPropertyMultiValue("otherPager", ref argproperties22);
-                        var argproperties23 = result.Properties;
-                        user.Mobile = GetADPropertyValue("mobile", ref argproperties23);
-                        var argproperties24 = result.Properties;
-                        user.MobileOther = GetADPropertyMultiValue("otherMobile", ref argproperties24);
-                        var argproperties25 = result.Properties;
-                        user.Fax = GetADPropertyValue("facsimileTelephoneNumber", ref argproperties25);
-                        var argproperties26 = result.Properties;
-                        user.FaxOther = GetADPropertyMultiValue("otherFacsimileTelephoneNumber", ref argproperties26);
-                        var argproperties27 = result.Properties;
-                        user.IpPhone = GetADPropertyValue("ipPhone", ref argproperties27);
-                        var argproperties28 = result.Properties;
-                        user.IpPhoneOther = GetADPropertyMultiValue("otherIpPhone", ref argproperties28);
-                        var argproperties29 = result.Properties;
-                        user.Note = GetADPropertyValue("info", ref argproperties29);
-                        var argproperties30 = result.Properties;
-                        user.Title = GetADPropertyValue("title", ref argproperties30);
-                        var argproperties31 = result.Properties;
-                        user.Department = GetADPropertyValue("department", ref argproperties31);
-                        var argproperties32 = result.Properties;
-                        user.Company = GetADPropertyValue("company", ref argproperties32);
-                        var argproperties33 = result.Properties;
-                        user.Manager = GetADPropertyValue("manager", ref argproperties33);
-                        var argproperties34 = result.Properties;
-                        string dn = GetADPropertyValue("distinguishedName", ref argproperties34);
+
+                        user.LogonName = GetADPropertyValue("sAMAccountName", result.Properties);
+                        user.UPN = GetADPropertyValue("userPrincipalName", result.Properties);
+                        user.FirstName = GetADPropertyValue("givenName", result.Properties);
+
+                        user.LastName = GetADPropertyValue("sn", result.Properties);
+                        user.MiddleInitial = GetADPropertyValue("initials", result.Properties);
+                        user.Phone = GetADPropertyValue("telephoneNumber", result.Properties);
+                        user.PhoneOther = GetADPropertyMultiValue("otherTelephone", result.Properties);
+                        user.Email = GetADPropertyValue("mail", result.Properties);
+                        user.Description = GetADPropertyValue("description", result.Properties);
+                        user.Office = GetADPropertyValue("physicalDeliveryOfficeName", result.Properties);
+                        user.WebPage = GetADPropertyValue("wWWHomePage", result.Properties);
+                        user.WebPageOther = GetADPropertyMultiValue("url", result.Properties);
+                        user.DisplayName = GetADPropertyValue("displayName", result.Properties);
+                        user.StreetName = GetADPropertyValue("streetAddress", result.Properties);
+                        user.PostOfficeBox = GetADPropertyValue("postOfficeBox", result.Properties);
+                        user.City = GetADPropertyValue("l", result.Properties);
+                        user.Province = GetADPropertyValue("st", result.Properties);
+                        user.PostalCode = GetADPropertyValue("postalCode", result.Properties);
+                        user.Country = GetADPropertyValue("co", result.Properties);
+                        user.HomePhone = GetADPropertyValue("homePhone", result.Properties);
+                        user.HomePhoneOther = GetADPropertyMultiValue("otherHomePhone", result.Properties);
+                        user.Pager = GetADPropertyValue("pager", result.Properties);
+                        user.PagerOther = GetADPropertyMultiValue("otherPager", result.Properties);
+                        user.Mobile = GetADPropertyValue("mobile", result.Properties);
+                        user.MobileOther = GetADPropertyMultiValue("otherMobile", result.Properties);
+                        user.Fax = GetADPropertyValue("facsimileTelephoneNumber", result.Properties);
+                        user.FaxOther = GetADPropertyMultiValue("otherFacsimileTelephoneNumber", result.Properties);
+                        user.IpPhone = GetADPropertyValue("ipPhone", result.Properties);
+                        user.IpPhoneOther = GetADPropertyMultiValue("otherIpPhone", result.Properties);
+                        user.Note = GetADPropertyValue("info", result.Properties);
+                        user.Title = GetADPropertyValue("title", result.Properties);
+                        user.Department = GetADPropertyValue("department", result.Properties);
+                        user.Company = GetADPropertyValue("company", result.Properties);
+                        user.Manager = GetADPropertyValue("manager", result.Properties);
+                        string dn = GetADPropertyValue("distinguishedName", result.Properties);
                         dn = dn.Replace(@"\,", " ");
                         var match = Regex.Match(dn, regExp, RegexOptions.IgnoreCase);
                         if (match.Success)
@@ -1101,8 +932,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                             user.OrganizationalUnit = match.Groups[1].Value;
                         }
 
-                        var argproperties35 = result.Properties;
-                        string whenCreated = GetADPropertyValue("whenCreated", ref argproperties35);
+                        string whenCreated = GetADPropertyValue("whenCreated", result.Properties);
                         if (!string.IsNullOrEmpty(whenCreated))
                         {
                             user.CreatedOn = Conversions.ToDate(whenCreated).ToLocalTime();
@@ -1177,14 +1007,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return null;
         }
 
-        /// <summary>
-        /// Gets account from name
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="init"></param>
-        /// <param name="lastName"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
         public Account GetAccountByCommonName(string firstName, string init, string lastName)
         {
             try
@@ -1198,12 +1020,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return null;
         }
-        /// <summary>
-        /// Gets Account by username
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public Account GetAccount(string userName)
         {
             try
@@ -1217,12 +1034,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return null;
         }
-        /// <summary>
-        /// Gets Account from guid
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public Account GetAccountByGuid(string guid)
         {
             try
@@ -1236,12 +1048,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return null;
         }
-        /// <summary>
-        /// Gets Account from the user's fully distinguished name
-        /// </summary>
-        /// <param name="distinguishedName"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public Account GetAccountByDistinguishedName(string distinguishedName)
         {
             try
@@ -1282,13 +1089,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return AddAccount(user, containerFullPath, cn);
         }
 
-        /// <summary>
-        /// Add user account
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="containerFullPath"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
         public bool AddAccount(Account user, string containerFullPath, string cn)
         {
             if (!PathExists(containerFullPath))
@@ -1334,12 +1134,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return true;
         }
-        /// <summary>
-        /// Update user account
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool UpdateAccount(Account user)
         {
             try
@@ -1359,12 +1154,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return default;
         }
 
-        /// <summary>
-        /// Deletes user account
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
         public bool DeleteUser(string userGuid)
         {
             try
@@ -1388,12 +1177,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return default;
         }
-        /// <summary>
-        /// Unlocks user account
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool UnlockAccount(string userGuid)
         {
             try
@@ -1419,12 +1203,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return true;
         }
-        /// <summary>
-        /// Enables user account
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool EnableAccount(string userGuid)
         {
             try
@@ -1452,12 +1231,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return true;
         }
-        /// <summary>
-        /// Disables user account
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool DisableAccount(string userGuid)
         {
             try
@@ -1486,13 +1260,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             return true;
         }
 
-        /// <summary>
-        /// Determines if User is a member of the group
-        /// </summary>
-        /// <param name="userGuid"></param>
-        /// <param name="groupName"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
         public bool IsUserInGroup(string userGuid, string groupName)
         {
             try
@@ -1524,12 +1291,9 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
         /// <summary>
         /// Gets all available UPN suffixes from the domain controller.
-        /// </summary>
-        /// <returns>A list of UPN suffixes.</returns>
-        /// <remarks>
         /// https://social.microsoft.com/Forums/en-US/7183c252-3b57-4f32-8cea-c2622bb82d14/how-to-get-list-all-upn-suffixes-in-c-code?forum=crm
         /// https://social.msdn.microsoft.com/forums/vstudio/en-US/d3e4cc17-9391-4d55-8416-4c952a01f762/get-upn-suffix-list-from-active-directory
-        /// </remarks>
+        /// </summary>       
         public List<string> GetUpnSuffixes()
         {
             DirectoryEntry de;
@@ -1594,11 +1358,6 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
         }
 
 
-        /// <summary>
-        /// Returns all the groups in AD
-        /// </summary>
-        /// <returns>Array of Group distinguished name</returns>
-        /// <remarks></remarks>
         public List<string> GetGroups()
         {
             // Connect to the AD + Get Diectory
@@ -1640,13 +1399,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return adGroups;
         }
-        /// <summary>
-        /// Adds user to group
-        /// </summary>
-        /// <param name="userGuid">guid of user to add</param>
-        /// <param name="groupName">name of the group</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool AddUserToGroup(string userGuid, string groupName)
         {
             DirectoryEntry de;
@@ -1671,13 +1424,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return default;
         }
-        /// <summary>
-        /// Removes User From Group
-        /// </summary>
-        /// <param name="userGuid">guid of the user</param>
-        /// <param name="groupName">name of the group</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool RemoveUserFromGroup(string userGuid, string groupName)
         {
             DirectoryEntry de;
@@ -1714,12 +1461,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
             return default;
         }
-        /// <summary>
-        /// Determines if group already exist in AD
-        /// </summary>
-        /// <param name="groupName">Name of the Group</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
+
         public bool GroupExists(string groupName)
         {
             DirectoryEntry de;
