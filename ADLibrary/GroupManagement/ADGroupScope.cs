@@ -1,7 +1,7 @@
 ﻿
 namespace GZ.ActiveDirectoryLibrary.GroupManagement
 {
-    public enum ADGroupScopes
+    public enum ADGroupScope
     {
         None = 0,
         DomainLocal = 4, // ActiveDs.ADS_GROUP_TYPE_ENUM.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP

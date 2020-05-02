@@ -1,6 +1,4 @@
-﻿
-
-namespace GZ.ActiveDirectoryLibrary
+﻿namespace GZ.ActiveDirectoryLibrary
 {
     public enum ADObjectTypes
     {

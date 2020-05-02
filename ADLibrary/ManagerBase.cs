@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Text;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace GZ.ActiveDirectoryLibrary
 {
@@ -45,7 +44,7 @@ namespace GZ.ActiveDirectoryLibrary
             // input = "\" & input
             // End If
 
-            if (input.EndsWith(" ") == true)
+            if (input.EndsWith(" "))
             {
                 // input = input.Replace(" ", "\ ")
                 input = input.Remove(input.Length);
@@ -56,9 +55,9 @@ namespace GZ.ActiveDirectoryLibrary
             invalidChrs = INVALID_LDAP_CHRS.ToCharArray();
             foreach (char c in invalidChrs)
             {
-                if (Conversions.ToString(c) != @"\")
+                if (Convert.ToString(c) != @"\")
                 {
-                    input = input.Replace(Conversions.ToString(c), string.Format(@"\{0}", c));
+                    input = input.Replace(Convert.ToString(c), string.Format(@"\{0}", c));
                 }
             }
 
@@ -74,7 +73,7 @@ namespace GZ.ActiveDirectoryLibrary
             char[] invalidChrs;
             invalidChrs = INVALID_LDAP_CHRS.ToCharArray();
             foreach (char c in invalidChrs)
-                input = input.Replace(string.Format(@"\{0}", c), Conversions.ToString(c));
+                input = input.Replace(string.Format(@"\{0}", c), Convert.ToString(c));
             return input;
         }
 
@@ -143,14 +142,7 @@ namespace GZ.ActiveDirectoryLibrary
             DirectoryEntry de;
             string concatenateChr = "";
             var adPath = new StringBuilder();
-            if (path == default && path.StartsWith(concatenateChr) == true)
-            {
-                concatenateChr = "";
-            }
-            else
-            {
-                concatenateChr = "/";
-            }
+            concatenateChr = !string.IsNullOrEmpty(path) && path.StartsWith(concatenateChr, StringComparison.OrdinalIgnoreCase) == true ? "" : "/";
 
             if (fullPath == true)
             {
@@ -171,313 +163,306 @@ namespace GZ.ActiveDirectoryLibrary
 
         protected DirectoryEntry GetDEtoRemoveUserFromGroup(string path)
         {
-            DirectoryEntry de;
-            de = new DirectoryEntry("LDAP://" + DomainControllerAddress, CompleteUserName, DomainControllerPassword);
-            var dSearch = new DirectorySearcher(de);
-            dSearch.Filter = "(&(objectClass=group)(CN=" + EscapeInvalidLDAPSearchCharacters(path) + "))";
-            dSearch.SearchScope = SearchScope.Subtree;
-            var results = dSearch.FindAll();
-            DirectoryEntry dentry;
-            if (results.Count < 1)
+            using (DirectoryEntry de = new DirectoryEntry("LDAP://" + DomainControllerAddress, CompleteUserName, DomainControllerPassword))
+            using (var dSearch = new DirectorySearcher(de))
             {
-                throw new ApplicationException("The Active Directory group does not exist.");
-            }
-            else
-            {
-                dentry = results[0].GetDirectoryEntry();
-            }
+                dSearch.Filter = "(&(objectClass=group)(CN=" + EscapeInvalidLDAPSearchCharacters(path) + "))";
+                dSearch.SearchScope = SearchScope.Subtree;
+                var results = dSearch.FindAll();
+                DirectoryEntry dentry;
+                if (results.Count < 1)
+                {
+                    throw new ApplicationException("The Active Directory group does not exist.");
+                }
+                else
+                {
+                    dentry = results[0].GetDirectoryEntry();
+                }
 
-            dentry.AuthenticationType = AuthenticationTypes.Sealing | AuthenticationTypes.Secure;
-            return dentry;
+                dentry.AuthenticationType = AuthenticationTypes.Sealing | AuthenticationTypes.Secure;
+                return dentry;
+            }
         }
 
         public DirectoryEntry GetDirectoryEntry(string objectGUID)
         {
-            DirectoryEntry de;
-            de = GetDirectoryEntry();
-            var deSearch = new DirectorySearcher(de);
-            deSearch.Filter = string.Format("(objectGUID={0})", Utility.GuidToOctetString(objectGUID));
-            var result = deSearch.FindOne();
-            if (result is object)
+            using (DirectoryEntry de = GetDirectoryEntry())
+            using (var deSearch = new DirectorySearcher(de))
             {
-                return result.GetDirectoryEntry();
-            }
-            else
-            {
-                return null;
+                deSearch.Filter = string.Format("(objectGUID={0})", Utility.GuidToOctetString(objectGUID));
+                var result = deSearch.FindOne();
+                if (result is object)
+                {
+                    return result.GetDirectoryEntry();
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
         public List<ADObject> GetChildren(string parentGUID)
-        {
-            DirectoryEntry deCurrentContainer;
-            DirectoryEntry deRoot;
+        {                        
             string rootPath;
             string relativePath;
             ADObject adObject = null;
             var children = new List<ADObject>();
-            deRoot = GetDirectoryEntry();
-            if ((parentGUID ?? "") == (string.Empty ?? ""))
+            using (DirectoryEntry deRoot = GetDirectoryEntry())                
             {
-                deCurrentContainer = deRoot;
-            }
-            else
-            {
-                deCurrentContainer = GetDirectoryEntry(parentGUID);
-            }
-
-            rootPath = deRoot.Path + "/";
-            // If deCurrentContainer.SchemaClassName = SCHEMA_CLASS_DOMAINDNS OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_GROUP OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_OU OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_BUILTINDOMAIN OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_CONTAINER Then
-
-            foreach (DirectoryEntry de in deCurrentContainer.Children)
-            {
-                relativePath = de.Path.Replace(rootPath, "");
-                adObject = null;
-                var switchExpr = de.SchemaClassName;
-                switch (switchExpr)
+                DirectoryEntry deCurrentContainer;
+                if ((parentGUID ?? "") == (string.Empty ?? ""))
                 {
-                    case SCHEMA_CLASS_USER:
-                        {
-                            adObject = new ADObject(ADObjectTypes.User, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_GROUP:
-                        {
-                            adObject = new ADObject(ADObjectTypes.Group, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_OU:
-                        {
-                            adObject = new ADObject(ADObjectTypes.OU, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_BUILTINDOMAIN:
-                        {
-                            adObject = new ADObject(ADObjectTypes.BuiltInDomain, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_CONTAINER:
-                        {
-                            adObject = new ADObject(ADObjectTypes.Container, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
+                    deCurrentContainer = deRoot;
+                }
+                else
+                {
+                    deCurrentContainer = GetDirectoryEntry(parentGUID);
                 }
 
-                if (adObject is object)
+                rootPath = deRoot.Path + "/";
+                // If deCurrentContainer.SchemaClassName = SCHEMA_CLASS_DOMAINDNS OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_GROUP OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_OU OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_BUILTINDOMAIN OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_CONTAINER Then
+
+                foreach (DirectoryEntry de in deCurrentContainer.Children)
                 {
-                    if (de.Properties.Contains("isCriticalSystemObject") == true)
+                    relativePath = de.Path.Replace(rootPath, "");
+                    adObject = null;
+                    var switchExpr = de.SchemaClassName;
+                    switch (switchExpr)
                     {
-                        if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
-                        {
-                            adObject.IsCriticalSystemObject = true;
-                        }
+                        case SCHEMA_CLASS_USER:
+                            {
+                                adObject = new ADObject(ADObjectTypes.User, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_GROUP:
+                            {
+                                adObject = new ADObject(ADObjectTypes.Group, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_OU:
+                            {
+                                adObject = new ADObject(ADObjectTypes.OU, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_BUILTINDOMAIN:
+                            {
+                                adObject = new ADObject(ADObjectTypes.BuiltInDomain, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_CONTAINER:
+                            {
+                                adObject = new ADObject(ADObjectTypes.Container, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
                     }
 
-                    if (de.Properties.Contains("showInAdvancedViewOnly") == true)
+                    if (adObject is object)
                     {
-                        if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                        if (de.Properties.Contains("isCriticalSystemObject") == true)
                         {
-                            adObject.ShowInAdvancedViewOnly = true;
+                            if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
+                            {
+                                adObject.IsCriticalSystemObject = true;
+                            }
                         }
-                    }
 
-                    children.Add(adObject);
+                        if (de.Properties.Contains("showInAdvancedViewOnly") == true)
+                        {
+                            if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                            {
+                                adObject.ShowInAdvancedViewOnly = true;
+                            }
+                        }
+
+                        children.Add(adObject);
+                    }
                 }
-            }
 
-            children.Sort(new Comparer.ADObjectComparer());
-            // children.Reverse()
-            return children;
+                children.Sort(new Comparer.ADObjectComparer());
+                // children.Reverse()
+                return children;
+            }
         }
 
         public List<ADObject> GetChildContainers(string parentGUID)
-        {
-            DirectoryEntry deCurrentContainer;
-            DirectoryEntry deRoot;
-            string rootPath;
-            string relativePath;
+        { 
+            string rootPath, relativePath;
             ADObject adObject = null;
             var children = new List<ADObject>();
-            deRoot = GetDirectoryEntry();
-            if ((parentGUID ?? "") == (string.Empty ?? ""))
+            using (DirectoryEntry deRoot = GetDirectoryEntry())
             {
-                deCurrentContainer = deRoot;
-            }
-            else
-            {
-                deCurrentContainer = GetDirectoryEntry(parentGUID);
-            }
-
-            rootPath = deRoot.Path + "/";
-            // If deCurrentContainer.SchemaClassName = SCHEMA_CLASS_DOMAINDNS OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_GROUP OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_OU OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_BUILTINDOMAIN OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_CONTAINER Then
-
-            foreach (DirectoryEntry de in deCurrentContainer.Children)
-            {
-                relativePath = de.Path.Replace(rootPath, "");
-                adObject = null;
-                var switchExpr = de.SchemaClassName;
-                switch (switchExpr)
+                DirectoryEntry deCurrentContainer;
+                if ((parentGUID ?? "") == (string.Empty ?? ""))
                 {
-                    case SCHEMA_CLASS_OU:
-                        {
-                            adObject = new ADObject(ADObjectTypes.OU, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_BUILTINDOMAIN:
-                        {
-                            adObject = new ADObject(ADObjectTypes.BuiltInDomain, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_CONTAINER:
-                        {
-                            adObject = new ADObject(ADObjectTypes.Container, Conversions.ToString(de.Properties["name"].Value), relativePath, de.Guid);
-                            break;
-                        }
+                    deCurrentContainer = deRoot;
+                }
+                else
+                {
+                    deCurrentContainer = GetDirectoryEntry(parentGUID);
                 }
 
-                if (adObject is object)
+                rootPath = deRoot.Path + "/";
+                // If deCurrentContainer.SchemaClassName = SCHEMA_CLASS_DOMAINDNS OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_GROUP OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_OU OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_BUILTINDOMAIN OrElse deCurrentContainer.SchemaClassName = SCHEMA_CLASS_CONTAINER Then
+
+                foreach (DirectoryEntry de in deCurrentContainer.Children)
                 {
-                    if (de.Properties.Contains("isCriticalSystemObject") == true)
+                    relativePath = de.Path.Replace(rootPath, "");
+                    adObject = null;
+                    var switchExpr = de.SchemaClassName;
+                    switch (switchExpr)
                     {
-                        if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
-                        {
-                            adObject.IsCriticalSystemObject = true;
-                        }
+                        case SCHEMA_CLASS_OU:
+                            {
+                                adObject = new ADObject(ADObjectTypes.OU, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_BUILTINDOMAIN:
+                            {
+                                adObject = new ADObject(ADObjectTypes.BuiltInDomain, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
+
+                        case SCHEMA_CLASS_CONTAINER:
+                            {
+                                adObject = new ADObject(ADObjectTypes.Container, Convert.ToString(de.Properties["name"].Value), relativePath, de.Guid);
+                                break;
+                            }
                     }
 
-                    if (de.Properties.Contains("showInAdvancedViewOnly") == true)
+                    if (adObject is object)
                     {
-                        if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                        if (de.Properties.Contains("isCriticalSystemObject") == true)
                         {
-                            adObject.ShowInAdvancedViewOnly = true;
+                            if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
+                            {
+                                adObject.IsCriticalSystemObject = true;
+                            }
                         }
-                    }
 
-                    children.Add(adObject);
+                        if (de.Properties.Contains("showInAdvancedViewOnly") == true)
+                        {
+                            if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                            {
+                                adObject.ShowInAdvancedViewOnly = true;
+                            }
+                        }
+
+                        children.Add(adObject);
+                    }
                 }
-            }
 
-            children.Sort(new Comparer.ADObjectComparer());
-            // children.Reverse()
-            return children;
+                children.Sort(new Comparer.ADObjectComparer());
+                // children.Reverse()
+                return children;
+            }
         }
 
         public ADObject RootObject
         {
             get
             {
-                DirectoryEntry de;
                 ADObject adObject = null;
-                de = GetDirectoryEntry();
-                adObject = new ADObject(ADObjectTypes.RootNode, Conversions.ToString(de.Properties["name"].Value), de.Path, de.Guid);
-                if (adObject is object)
+                using (DirectoryEntry de = GetDirectoryEntry())
                 {
-                    if (de.Properties.Contains("isCriticalSystemObject") == true)
+                    adObject = new ADObject(ADObjectTypes.RootNode, Convert.ToString(de.Properties["name"].Value), de.Path, de.Guid);
+                    if (adObject is object)
                     {
-                        if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
+                        if (de.Properties.Contains("isCriticalSystemObject")
+                            &&
+                           (de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
                         {
                             adObject.IsCriticalSystemObject = true;
-                        }
-                    }
+                        }                        
 
-                    if (de.Properties.Contains("showInAdvancedViewOnly") == true)
-                    {
-                        if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                        if (de.Properties.Contains("showInAdvancedViewOnly")
+                            &&
+                           (de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
                         {
                             adObject.ShowInAdvancedViewOnly = true;
-                        }
+                        }                    
                     }
+                    return adObject;
                 }
-
-                return adObject;
             }
         }
 
         public ADObject GetADObject(Guid guid)
         {
-            DirectoryEntry de;
             ADObjectTypes objType;
             ADObject adObject;
-            de = GetDirectoryEntry(guid.ToString());
-            if (de is object)
+            using (DirectoryEntry de = GetDirectoryEntry(guid.ToString()))
             {
-                var switchExpr = de.SchemaClassName;
-                switch (switchExpr)
+                if (de != null)
                 {
-                    case SCHEMA_CLASS_BUILTINDOMAIN:
-                        {
-                            objType = ADObjectTypes.BuiltInDomain;
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_CONTAINER:
-                        {
-                            objType = ADObjectTypes.Container;
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_DOMAINDNS:
-                        {
-                            objType = ADObjectTypes.RootNode;
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_GROUP:
-                        {
-                            objType = ADObjectTypes.Group;
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_OU:
-                        {
-                            objType = ADObjectTypes.OU;
-                            break;
-                        }
-
-                    case SCHEMA_CLASS_USER:
-                        {
-                            objType = ADObjectTypes.User;
-                            break;
-                        }
-
-                    default:
-                        {
-                            objType = ADObjectTypes.Unknown;
-                            break;
-                        }
-                }
-
-                adObject = new ADObject(objType, Conversions.ToString(de.Properties["name"].Value), de.Path, de.Guid);
-                if (adObject is object)
-                {
-                    if (de.Properties.Contains("isCriticalSystemObject") == true)
+                    var switchExpr = de.SchemaClassName;
+                    switch (switchExpr)
                     {
-                        if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
+                        case SCHEMA_CLASS_BUILTINDOMAIN:
+                            {
+                                objType = ADObjectTypes.BuiltInDomain;
+                                break;
+                            }
+                        case SCHEMA_CLASS_CONTAINER:
+                            {
+                                objType = ADObjectTypes.Container;
+                                break;
+                            }
+                        case SCHEMA_CLASS_DOMAINDNS:
+                            {
+                                objType = ADObjectTypes.RootNode;
+                                break;
+                            }
+                        case SCHEMA_CLASS_GROUP:
+                            {
+                                objType = ADObjectTypes.Group;
+                                break;
+                            }
+                        case SCHEMA_CLASS_OU:
+                            {
+                                objType = ADObjectTypes.OU;
+                                break;
+                            }
+                        case SCHEMA_CLASS_USER:
+                            {
+                                objType = ADObjectTypes.User;
+                                break;
+                            }
+                        default:
+                            {
+                                objType = ADObjectTypes.Unknown;
+                                break;
+                            }
+                    }
+
+                    adObject = new ADObject(objType, Convert.ToString(de.Properties["name"].Value), de.Path, de.Guid);
+                    if (adObject is object)
+                    {
+                        if (de.Properties.Contains("isCriticalSystemObject") == true
+                            &&
+                            (de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
                         {
                             adObject.IsCriticalSystemObject = true;
-                        }
-                    }
+                        }                        
 
-                    if (de.Properties.Contains("showInAdvancedViewOnly") == true)
-                    {
-                        if ((de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
+                        if (de.Properties.Contains("showInAdvancedViewOnly") == true
+                            &&
+                            (de.Properties["showInAdvancedViewOnly"].Value.ToString().ToLower() ?? "") == "true")
                         {
                             adObject.ShowInAdvancedViewOnly = true;
-                        }
+                        }                        
                     }
+                    return adObject;
                 }
-
-                return adObject;
-            }
-            else
-            {
-                return null;
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -504,9 +489,8 @@ namespace GZ.ActiveDirectoryLibrary
 
         public string GetDistinguishedName(Guid guid)
         {
-            DirectoryEntry de;
-            de = GetDirectoryEntry(guid.ToString());
-            return Conversions.ToString(de.Properties["distinguishedName"].Value);
+            DirectoryEntry de = GetDirectoryEntry(guid.ToString());
+            return Convert.ToString(de.Properties["distinguishedName"].Value);
         }
 
         public string GetDistinguishedName(string commonName)
@@ -587,7 +571,7 @@ namespace GZ.ActiveDirectoryLibrary
         {
             if (properties.Contains(key) == true && properties[key].Count > 0)
             {
-                return UnEscapeInvalidLDAPSearchCharacters(Conversions.ToString(properties[key][0]));
+                return UnEscapeInvalidLDAPSearchCharacters(Convert.ToString(properties[key][0]));
             }
 
             return "";
@@ -606,7 +590,7 @@ namespace GZ.ActiveDirectoryLibrary
                     }
                     else
                     {
-                        value = value + Conversions.ToString(Constants.MULTI_VALUED_SEPARATOR) + UnEscapeInvalidLDAPSearchCharacters(val);
+                        value = value + Convert.ToString(Constants.MULTI_VALUED_SEPARATOR) + UnEscapeInvalidLDAPSearchCharacters(val);
                     }
                 }
             }
@@ -665,7 +649,7 @@ namespace GZ.ActiveDirectoryLibrary
             return default;
         }
 
-        protected void SetADProperty(string key, string value, ref System.DirectoryServices.PropertyCollection properties)
+        protected void SetADProperty(string key, string value,  PropertyCollection properties)
         {
             if (!string.IsNullOrEmpty(value))
             {
@@ -677,7 +661,7 @@ namespace GZ.ActiveDirectoryLibrary
             }
         }
 
-        protected void SetMultiValueADProperty(string key, string values, ref System.DirectoryServices.PropertyCollection properties)
+        protected void SetMultiValueADProperty(string key, string values, PropertyCollection properties)
         {
             if (!string.IsNullOrEmpty(values))
             {

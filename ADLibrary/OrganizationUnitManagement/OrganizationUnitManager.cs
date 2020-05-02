@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.DirectoryServices;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
 {
@@ -10,11 +8,9 @@ namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
         private const string FIND_SEARCH_EXCEPTION_MESSAGE = "There is no such object on the server. (Exception from HRESULT: 0x80072030)";
 
         private OrganizationUnitManager()
-        {
-        }
+        {}
 
         internal OrganizationUnitManager(string domainControllerAddress, string domainName, string userName, string password)
-
         {
             DomainControllerAddress = domainControllerAddress;
             DomainControllerUserName = userName;
@@ -29,7 +25,7 @@ namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
             de = GetDirectoryEntry(organizationalUnitGUID);
             if (de is object)
             {
-                adOU = new ADOrganizationalUnit(Conversions.ToString(de.Properties["name"].Value), de.Path, de.Guid);
+                adOU = new ADOrganizationalUnit(Convert.ToString(de.Properties["name"].Value), de.Path, de.Guid);
                 if (de.Properties.Contains("isCriticalSystemObject") == true)
                 {
                     if ((de.Properties["isCriticalSystemObject"].Value.ToString().ToLower() ?? "") == "true")
@@ -37,7 +33,6 @@ namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
                         adOU.IsCriticalSystemObject = true;
                     }
                 }
-
                 return adOU;
             }
             else

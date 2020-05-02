@@ -3,7 +3,6 @@ using System;
 using System.DirectoryServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace GZ.ActiveDirectoryLibrary
 {
@@ -55,7 +54,7 @@ namespace GZ.ActiveDirectoryLibrary
             {
                 var r = new string[pValues.Count];
                 for (int i = 0, loopTo = pValues.Count - 1; i <= loopTo; i++)
-                    r[i] = Conversions.ToString(pValues[i]);
+                    r[i] = Convert.ToString(pValues[i]);
                 return r;
             }
 
@@ -68,7 +67,7 @@ namespace GZ.ActiveDirectoryLibrary
             {
                 var r = new string[pValues.Count];
                 for (int i = 0, loopTo = pValues.Count - 1; i <= loopTo; i++)
-                    r[i] = Conversions.ToString(pValues[i]);
+                    r[i] = Convert.ToString(pValues[i]);
                 return r;
             }
 

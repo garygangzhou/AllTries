@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.DirectoryServices;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace GZ.ActiveDirectoryLibrary.GroupManagement
 {   
@@ -29,31 +28,31 @@ namespace GZ.ActiveDirectoryLibrary.GroupManagement
             de = GetDirectoryEntry(groupGUID);
             if (de is object)
             {
-                adGrp = new ADGroup(Conversions.ToString(de.Properties["name"].Value), de.Path, de.Guid);
-                if ((Conversions.ToInteger(de.Properties["groupType"].Value) & (int)ADGroupTypes.Security) == (int)ADGroupTypes.Security)
+                adGrp = new ADGroup(Convert.ToString(de.Properties["name"].Value), de.Path, de.Guid);
+                if ((Convert.ToInt32(de.Properties["groupType"].Value) & (int)ADGroupType.Security) == (int)ADGroupType.Security)
                 {
-                    adGrp.Type = ADGroupTypes.Security;
+                    adGrp.Type = ADGroupType.Security;
                 }
                 else
                 {
-                    adGrp.Type = ADGroupTypes.Distribution;
+                    adGrp.Type = ADGroupType.Distribution;
                 }
 
-                if ((Conversions.ToInteger(de.Properties["groupType"].Value) & (int)ADGroupScopes.DomainLocal) == (int)ADGroupScopes.DomainLocal)
+                if ((Convert.ToInt32(de.Properties["groupType"].Value) & (int)ADGroupScope.DomainLocal) == (int)ADGroupScope.DomainLocal)
                 {
-                    adGrp.Scope = ADGroupScopes.DomainLocal;
+                    adGrp.Scope = ADGroupScope.DomainLocal;
                 }
-                else if ((Conversions.ToInteger(de.Properties["groupType"].Value) & (int)ADGroupScopes.Global) == (int)ADGroupScopes.Global)
+                else if ((Convert.ToInt32(de.Properties["groupType"].Value) & (int)ADGroupScope.Global) == (int)ADGroupScope.Global)
                 {
-                    adGrp.Scope = ADGroupScopes.Global;
+                    adGrp.Scope = ADGroupScope.Global;
                 }
-                else if ((Conversions.ToInteger(de.Properties["groupType"].Value) & (int)ADGroupScopes.Universal) == (int)ADGroupScopes.Universal)
+                else if ((Convert.ToInt32(de.Properties["groupType"].Value) & (int)ADGroupScope.Universal) == (int)ADGroupScope.Universal)
                 {
-                    adGrp.Scope = ADGroupScopes.Universal;
+                    adGrp.Scope = ADGroupScope.Universal;
                 }
                 else
                 {
-                    adGrp.Scope = ADGroupScopes.Local;
+                    adGrp.Scope = ADGroupScope.Local;
                 }
 
                 if (de.Properties.Contains("isCriticalSystemObject") == true)
@@ -90,7 +89,7 @@ namespace GZ.ActiveDirectoryLibrary.GroupManagement
             }
         }      
 
-        public void AddGroup(string parentGUID, string groupName, ADGroupTypes groupType, ADGroupScopes groupScope)
+        public void AddGroup(string parentGUID, string groupName, ADGroupType groupType, ADGroupScope groupScope)
         {
             DirectoryEntry de;
             DirectoryEntry deGroup;

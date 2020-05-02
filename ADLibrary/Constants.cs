@@ -1,6 +1,4 @@
-﻿
-
-namespace GZ.ActiveDirectoryLibrary
+﻿namespace GZ.ActiveDirectoryLibrary
 {
     internal class Constants
     {

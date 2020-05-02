@@ -1,13 +1,12 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.DirectoryServices;
 using System.Linq;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using GZ.ActiveDirectoryLibrary.Exceptions;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace GZ.ActiveDirectoryLibrary.UserManagement
 {
@@ -40,13 +39,13 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
         private string EscapeLogonChrs(string logon)
         {
             foreach (char c in Constants.LOGON_ESCAPE_CHRS.ToCharArray())
-                logon = logon.Replace(Conversions.ToString(c), @"\" + Conversions.ToString(c));
+                logon = logon.Replace(Convert.ToString(c), @"\" + Convert.ToString(c));
             return logon;
-        }
+        }      
 
         private void SetAccountOptions(Account user, DirectoryEntry de)
         {
-            int exp = Conversions.ToInteger(de.Properties["userAccountControl"].Value);
+            _ = int.TryParse(de.Properties["userAccountControl"].Value == null ? string.Empty : de.Properties["userAccountControl"].Value.ToString(), out int exp);
 
             // 'Normail Account
             // exp = exp Or &H200
@@ -217,11 +216,11 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
         {
             if (!string.IsNullOrEmpty(middleInitial.Trim()))
             {
-                return Strings.Trim(firstName + " " + middleInitial + ". " + lastName);
+                return (firstName + " " + middleInitial + ". " + lastName).Trim ();
             }
             else
             {
-                return Strings.Trim(firstName + " " + lastName);
+                return (firstName + " " + lastName).Trim();
             }
         }
 
@@ -236,8 +235,8 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             {
                 results = deSearch.FindAll();
                 if (results.Count > 0)
-                {
-                    return Math.Abs(Conversions.ToLong(results[0].Properties["maxPwdAge"][0]));
+                {                    
+                    return Math.Abs(Convert.ToInt64(results[0].Properties["maxPwdAge"][0]));
                 }
                 else
                 {
@@ -385,7 +384,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 string whenCreated = GetADPropertyValue("whenCreated", result.Properties);
                 if (!string.IsNullOrEmpty(whenCreated))
                 {
-                    user.CreatedOn = Conversions.ToDate(whenCreated).ToLocalTime();
+                    user.CreatedOn = Convert.ToDateTime(whenCreated).ToLocalTime();
                 }
 
                 user.CreatedBy = GetADPropertyValue("creator", result.Properties);
@@ -418,14 +417,14 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
                 user.CreatedBy = GetOwner(result.GetDirectoryEntry());
                 // account options
-                int exp = Conversions.ToInteger(result.Properties["userAccountControl"][0]);
+                int exp = Convert.ToInt32(result.Properties["userAccountControl"][0]);
 
                 // Use "msDS-User-Account-Control-Computed" property instead of "userAccountControl" to determine locked accounts
                 // The "msDS-User-Account-Control-Computed" is only available in Windows 2003 or later                
                 int expComputed = -1;
                 if (result.Properties.Contains("msDS-User-Account-Control-Computed"))
                 {
-                    expComputed = Conversions.ToInteger(result.Properties["msDS-User-Account-Control-Computed"][0]);
+                    expComputed = Convert.ToInt32(result.Properties["msDS-User-Account-Control-Computed"][0]);
                 }
 
                 // UF_DONT_EXPIRE_PASSWD 0x10000
@@ -454,7 +453,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     }
                 }
 
-                if (!(result.Properties["pwdLastSet"] == default) && Conversions.ToLong(result.Properties["pwdLastSet"][0]) == (long)0)
+                if (!(result.Properties["pwdLastSet"] == default) && Convert.ToInt64(result.Properties["pwdLastSet"][0]) == (long)0)
                 {
                     user.AccountOptionUserMustChangePasswordNextLogon = true;
                 }
@@ -467,79 +466,44 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
         }
 
         private void AddUpdateUser(Account user, DirectoryEntry userDe)
-        {
-            var argproperties = userDe.Properties;
-            SetADProperty("sAMAccountName", user.LogonName, ref argproperties);
-            var argproperties1 = userDe.Properties;
-            SetADProperty("userPrincipalName", user.UPN, ref argproperties1);
-            var argproperties2 = userDe.Properties;
-            SetADProperty("givenName", user.FirstName, ref argproperties2);
-            var argproperties3 = userDe.Properties;
-            SetADProperty("sn", user.LastName, ref argproperties3);
-            var argproperties4 = userDe.Properties;
-            SetADProperty("initials", user.MiddleInitial, ref argproperties4);
-            var argproperties5 = userDe.Properties;
-            SetADProperty("displayName", user.DisplayName, ref argproperties5);
-            var argproperties6 = userDe.Properties;
-            SetADProperty("description", user.Description, ref argproperties6);
-            var argproperties7 = userDe.Properties;
-            SetADProperty("telephoneNumber", user.Phone, ref argproperties7);
-            var argproperties8 = userDe.Properties;
-            SetMultiValueADProperty("otherTelephone", user.PhoneOther, ref argproperties8);
-            var argproperties9 = userDe.Properties;
-            SetADProperty("mail", user.Email, ref argproperties9);
-            var argproperties10 = userDe.Properties;
-            SetADProperty("physicalDeliveryOfficeName", user.Office, ref argproperties10);
-            var argproperties11 = userDe.Properties;
-            SetADProperty("wWWHomePage", user.WebPage, ref argproperties11);
-            var argproperties12 = userDe.Properties;
-            SetMultiValueADProperty("url", user.WebPageOther, ref argproperties12);
-            var argproperties13 = userDe.Properties;
-            SetADProperty("streetAddress", user.StreetName, ref argproperties13);
-            var argproperties14 = userDe.Properties;
-            SetADProperty("postOfficeBox", user.PostOfficeBox, ref argproperties14);
-            var argproperties15 = userDe.Properties;
-            SetADProperty("l", user.City, ref argproperties15);
-            var argproperties16 = userDe.Properties;
-            SetADProperty("st", user.Province, ref argproperties16);
-            var argproperties17 = userDe.Properties;
-            SetADProperty("postalCode", user.PostalCode, ref argproperties17);
-            var argproperties18 = userDe.Properties;
-            SetADProperty("co", user.Country, ref argproperties18);
-            var argproperties19 = userDe.Properties;
-            SetADProperty("c", user.CountryAbbr, ref argproperties19);
-            var argproperties20 = userDe.Properties;
-            SetADProperty("homePhone", user.HomePhone, ref argproperties20);
-            var argproperties21 = userDe.Properties;
-            SetMultiValueADProperty("otherHomePhone", user.HomePhoneOther, ref argproperties21);
-            var argproperties22 = userDe.Properties;
-            SetADProperty("pager", user.Pager, ref argproperties22);
-            var argproperties23 = userDe.Properties;
-            SetMultiValueADProperty("otherPager", user.PagerOther, ref argproperties23);
-            var argproperties24 = userDe.Properties;
-            SetADProperty("mobile", user.Mobile, ref argproperties24);
-            var argproperties25 = userDe.Properties;
-            SetMultiValueADProperty("otherMobile", user.MobileOther, ref argproperties25);
-            var argproperties26 = userDe.Properties;
-            SetADProperty("facsimileTelephoneNumber", user.Fax, ref argproperties26);
-            var argproperties27 = userDe.Properties;
-            SetMultiValueADProperty("otherFacsimileTelephoneNumber", user.FaxOther, ref argproperties27);
-            var argproperties28 = userDe.Properties;
-            SetADProperty("ipPhone", user.IpPhone, ref argproperties28);
-            var argproperties29 = userDe.Properties;
-            SetMultiValueADProperty("otherIpPhone", user.IpPhoneOther, ref argproperties29);
-            var argproperties30 = userDe.Properties;
-            SetADProperty("info", user.Note, ref argproperties30);
-            var argproperties31 = userDe.Properties;
-            SetADProperty("title", user.Title, ref argproperties31);
-            var argproperties32 = userDe.Properties;
-            SetADProperty("department", user.Department, ref argproperties32);
-            var argproperties33 = userDe.Properties;
-            SetADProperty("company", user.Company, ref argproperties33);
+        {            
+            SetADProperty("sAMAccountName", user.LogonName, userDe.Properties);            
+            SetADProperty("userPrincipalName", user.UPN, userDe.Properties);
+            SetADProperty("givenName", user.FirstName, userDe.Properties);            
+            SetADProperty("sn", user.LastName, userDe.Properties);            
+            SetADProperty("initials", user.MiddleInitial, userDe.Properties);            
+            SetADProperty("displayName", user.DisplayName, userDe.Properties);            
+            SetADProperty("description", user.Description, userDe.Properties);            
+            SetADProperty("telephoneNumber", user.Phone, userDe.Properties);            
+            SetMultiValueADProperty("otherTelephone", user.PhoneOther, userDe.Properties);           
+            SetADProperty("mail", user.Email, userDe.Properties);            
+            SetADProperty("physicalDeliveryOfficeName", user.Office, userDe.Properties);            
+            SetADProperty("wWWHomePage", user.WebPage, userDe.Properties);            
+            SetMultiValueADProperty("url", user.WebPageOther, userDe.Properties);            
+            SetADProperty("streetAddress", user.StreetName, userDe.Properties);            
+            SetADProperty("postOfficeBox", user.PostOfficeBox, userDe.Properties);            
+            SetADProperty("l", user.City, userDe.Properties);            
+            SetADProperty("st", user.Province, userDe.Properties);            
+            SetADProperty("postalCode", user.PostalCode, userDe.Properties);            
+            SetADProperty("co", user.Country, userDe.Properties);            
+            SetADProperty("c", user.CountryAbbr, userDe.Properties);           
+            SetADProperty("homePhone", user.HomePhone, userDe.Properties);            
+            SetMultiValueADProperty("otherHomePhone", user.HomePhoneOther, userDe.Properties);            
+            SetADProperty("pager", user.Pager, userDe.Properties);            
+            SetMultiValueADProperty("otherPager", user.PagerOther, userDe.Properties);            
+            SetADProperty("mobile", user.Mobile, userDe.Properties);            
+            SetMultiValueADProperty("otherMobile", user.MobileOther, userDe.Properties);            
+            SetADProperty("facsimileTelephoneNumber", user.Fax, userDe.Properties);            
+            SetMultiValueADProperty("otherFacsimileTelephoneNumber", user.FaxOther, userDe.Properties);            
+            SetADProperty("ipPhone", user.IpPhone, userDe.Properties);            
+            SetMultiValueADProperty("otherIpPhone", user.IpPhoneOther, userDe.Properties);            
+            SetADProperty("info", user.Note, userDe.Properties);            
+            SetADProperty("title", user.Title, userDe.Properties);            
+            SetADProperty("department", user.Department, userDe.Properties);           
+            SetADProperty("company", user.Company, userDe.Properties);
             if (user.UpdateUserRole == Account.UpdateUserRoleType.DomainAdmin)
-            {
-                var argproperties34 = userDe.Properties;
-                SetADProperty("manager", user.Manager, ref argproperties34);
+            {                
+                SetADProperty("manager", user.Manager, userDe.Properties);
             }
 
             userDe.CommitChanges();
@@ -550,7 +514,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             // We should be careful to only add/delete what we need to. This
             // means not deleting and re-creating everything.
 
-            if (!Information.IsNothing(user.MemberOf))
+            if (user.MemberOf != null)
             {
                 IEnumerable<string> oldGroups = Utility.GetGroupNameFromDN(Utility.ConvertMultiValuedToStringArray(userDe.Properties["memberOf"]));
                 var groupsToRemove = oldGroups.Except(user.MemberOf);
@@ -801,7 +765,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
 
                 var users = new List<Account>();
                 var deSearch = new DirectorySearcher(de);
-                if (Information.IsNothing(guids))
+                if (guids != null)
                 {
                     if (!string.IsNullOrWhiteSpace(criteria.GUID))
                     {
@@ -935,14 +899,14 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                         string whenCreated = GetADPropertyValue("whenCreated", result.Properties);
                         if (!string.IsNullOrEmpty(whenCreated))
                         {
-                            user.CreatedOn = Conversions.ToDate(whenCreated).ToLocalTime();
+                            user.CreatedOn = Convert.ToDateTime(whenCreated).ToLocalTime();
                         }
 
                         user.CreatedBy = GetOwner(result.GetDirectoryEntry());
                         ;
 
                         // account options
-                        int exp = Conversions.ToInteger(result.Properties["userAccountControl"][0]);
+                        int exp = Convert.ToInt32(result.Properties["userAccountControl"][0]);
 
                         // URS-18: ISAAC-Users account are getting locked in AD but their account in UMA shows unlocked. 
                         // 
@@ -951,7 +915,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                         int expComputed = -1;
                         if (result.Properties.Contains("msDS-User-Account-Control-Computed"))
                         {
-                            expComputed = Conversions.ToInteger(result.Properties["msDS-User-Account-Control-Computed"][0]);
+                            expComputed = Convert.ToInt32(result.Properties["msDS-User-Account-Control-Computed"][0]);
                         }
 
                         // UF_DONT_EXPIRE_PASSWD 0x10000
@@ -1100,14 +1064,11 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
             {
                 var de = GetDirectoryEntry(containerFullPath, true);
                 var userDe = de.Children.Add("CN=" + cn, "user");
-                var argproperties = userDe.Properties;
-                SetADProperty("sAMAccountName", EscapeLogonChrs(user.LogonName), ref argproperties);
-                var argproperties1 = userDe.Properties;
-                SetADProperty("userPrincipalName", EscapeLogonChrs(user.LogonName), ref argproperties1);
-                var argproperties2 = userDe.Properties;
-                SetADProperty("givenName", user.FirstName, ref argproperties2);
-                var argproperties3 = userDe.Properties;
-                SetADProperty("sn", user.LastName, ref argproperties3);
+                
+                SetADProperty("sAMAccountName", EscapeLogonChrs(user.LogonName), userDe.Properties);                
+                SetADProperty("userPrincipalName", EscapeLogonChrs(user.LogonName), userDe.Properties);                
+                SetADProperty("givenName", user.FirstName, userDe.Properties);                
+                SetADProperty("sn", user.LastName, userDe.Properties);
                 de.CommitChanges();
                 userDe.CommitChanges();
                 user.Guid = userDe.Guid.ToString();
@@ -1186,7 +1147,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 if (!(result == default))
                 {
                     var deUser = result.GetDirectoryEntry();
-                    int exp = Conversions.ToInteger(deUser.Properties["userAccountControl"][0]);
+                    int exp = Convert.ToInt32(deUser.Properties["userAccountControl"][0]);
                     exp = exp & ~Constants.ACCOUNT_OPTION_ACCOUNT_LOCKOUT;
                     deUser.Properties["userAccountControl"].Value = exp;
                     deUser.CommitChanges();
@@ -1212,7 +1173,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 if (!(result == default))
                 {
                     var deUser = result.GetDirectoryEntry();
-                    int exp = Conversions.ToInteger(deUser.Properties["userAccountControl"][0]);
+                    int exp = Convert.ToInt32(deUser.Properties["userAccountControl"][0]);
 
                     // enable account
                     exp = exp & ~Constants.ACCOUNT_OPTION_ACCOUNT_DISABLED;
@@ -1240,7 +1201,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 if (!(result == default))
                 {
                     var deUser = result.GetDirectoryEntry();
-                    int exp = Conversions.ToInteger(deUser.Properties["userAccountControl"][0]);
+                    int exp = Convert.ToInt32(deUser.Properties["userAccountControl"][0]);
 
                     // disable account
                     exp = exp | Constants.ACCOUNT_OPTION_ACCOUNT_DISABLED;
@@ -1273,7 +1234,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                     {
                         foreach (string group in userGroups)
                         {
-                            if (!Information.IsNothing(group) && (group.ToLower() ?? "") == (groupName.ToLower() ?? ""))
+                            if ((group != null) && (group.ToLower() ?? "") == (groupName.ToLower() ?? ""))
                             {
                                 return true;
                             }
@@ -1375,7 +1336,7 @@ namespace GZ.ActiveDirectoryLibrary.UserManagement
                 foreach (SearchResult result in results)
                 {
                     string tempName = result.GetDirectoryEntry().Name.ToString();
-                    if (Strings.InStr(1, tempName, "CN=") > 0)
+                    if (tempName.IndexOf("CN=") > 0)
                     {
                         adGroups.Add(tempName.Substring(3));
                     }

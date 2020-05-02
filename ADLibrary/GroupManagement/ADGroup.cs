@@ -19,8 +19,8 @@ namespace GZ.ActiveDirectoryLibrary.GroupManagement
         {
         }
 
-        public ADGroupScopes Scope { get; set; }
-        public ADGroupTypes Type { get; set; }
+        public ADGroupScope Scope { get; set; }
+        public new ADGroupType Type { get; set; }
 
     }
 }
