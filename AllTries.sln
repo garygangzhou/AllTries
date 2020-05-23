@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPMLParser", "SPML_model\SP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiveDirectoryLibrary", "ADLibrary\ActiveDirectoryLibrary.csproj", "{897E2A56-F5E5-087A-2F54-3200CB5BB92D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{6AC79AEE-9820-4540-A053-B7863EBF671F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MandrillEmail", "MandrillEmail\MandrillEmail.csproj", "{667C7D4B-87A8-4038-A8FE-C05FBF9BA992}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{897E2A56-F5E5-087A-2F54-3200CB5BB92D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC79AEE-9820-4540-A053-B7863EBF671F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC79AEE-9820-4540-A053-B7863EBF671F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC79AEE-9820-4540-A053-B7863EBF671F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC79AEE-9820-4540-A053-B7863EBF671F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667C7D4B-87A8-4038-A8FE-C05FBF9BA992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667C7D4B-87A8-4038-A8FE-C05FBF9BA992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{667C7D4B-87A8-4038-A8FE-C05FBF9BA992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667C7D4B-87A8-4038-A8FE-C05FBF9BA992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
