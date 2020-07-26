@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
+    <style>  
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #headercontainer{
+        background-color: red;
+        height: 50px;
+      } 
+      #footercontainer{
+        background-color: red;
+        height: 20px;
+      }   
+      .flex {
+          display: flex;
+          flex-direction: row; 
+          background-color: rgb(142, 211, 15);
+          height: calc(100% - 70px);
+      }
+      .gutter.gutter-horizontal {
+          cursor: ew-resize;
+      }
+      #one{
+        background-color: aqua;
+        text-align: center;              
+      }
+      #two{
+        background-color:burlywood;
+        text-align: center;       
+      }      
+    </style>    
+</head>
+<body>
+  <div id="headercontainer">Header</div>
+  <div id="container" class="flex">
+    <div id="one"><span>one</span></div>
+    <div id="two"><span>two</span></div>
+  </div>
+  <div id="footercontainer">Footer</div>
+
+  <script>
+    Split(['#one', '#two'], {
+      sizes: [25, 75],
+      gutterSize: 5,
+      minSize: [200,450],
+      expandToMin: true,
+
+      elementStyle: (dimension, size, gutterSize) => ({
+          'flex-basis': `calc(${size}% - ${gutterSize}px)`,
+      }),
+
+      gutterStyle: (dimension, gutterSize) => ({
+          'flex-basis':  `${gutterSize}px`,
+      }),
+    })
+  </script>
+</body>
+</html>

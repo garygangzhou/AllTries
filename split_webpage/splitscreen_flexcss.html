@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        #outer {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+        }        
+        #inner_header {            
+            background-color: grey;
+            height: 70px;            
+        }        
+        #inner_remaining {
+            background-color: #579b81;
+            flex-grow: 1;            
+        }
+        #inner_footer {
+            background-color: #e0e9e5;
+            height: 25px;           
+        }
+
+        #contentcontainer {
+            display: flex;
+            flex-flow: row;
+            width: 100%;
+            height: 100%;
+        } 
+        #contentleft {            
+            background-color: red;
+            width: 150px;            
+        }        
+        #contentright {
+            background-color: yellow;
+            flex-grow: 1;            
+        }
+    </style>
+</head>   
+<body>
+    <div id="outer">
+        <div id="inner_header">
+            I have a fixed height
+        </div>
+        <div id="inner_remaining">
+            <div id="contentcontainer">
+                <div id="contentleft"></div>
+                <div id="contentright"></div>
+            </div>
+        </div>
+        <div id="inner_footer">
+            I take up the remaining height
+        </div>
+    </div>
+</body>
+</html>
