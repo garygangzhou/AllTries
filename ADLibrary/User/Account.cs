@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GZ.ActiveDirectoryLibrary.UserManagement
+namespace GZ.ActiveDirectoryLibrary.User
 {  
     [Serializable()]
     public class Account

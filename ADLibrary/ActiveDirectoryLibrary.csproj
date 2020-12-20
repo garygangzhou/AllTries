@@ -13,7 +13,7 @@
     <ProjectGuid>{897E2A56-F5E5-087A-2F54-3200CB5BB92D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>GZ.ActiveDirectoryLibrary</RootNamespace>
-    <AssemblyName>GZActiveDirectoryLibrary</AssemblyName>
+    <AssemblyName>GZ.ActiveDirectoryLibrary</AssemblyName>
     <MyType>Windows</MyType>
     <OptionStrict>On</OptionStrict>
     <SccProjectName>
@@ -24,7 +24,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -87,7 +87,7 @@
     <Compile Include="ADObjectTypes.cs" />
     <Compile Include="Comparer\ADObjectComparer.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DomainController.cs" />
+    <Compile Include="Domain\DomainControllerManager.cs" />
     <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Exceptions\ActiveDirectoryException.cs" />
     <Compile Include="Exceptions\ErrorCode.cs" />
@@ -98,18 +98,18 @@
     <Compile Include="Exceptions\PasswordInvalidException.cs" />
     <Compile Include="Exceptions\PasswordPolicyException.cs" />
     <Compile Include="Exceptions\UnknownErrorException.cs" />
-    <Compile Include="GroupManagement\ADGroup.cs" />
-    <Compile Include="GroupManagement\ADGroupScope.cs" />
-    <Compile Include="GroupManagement\ADGroupType.cs" />
-    <Compile Include="GroupManagement\GroupManager.cs" />
+    <Compile Include="Group\ADGroup.cs" />
+    <Compile Include="Group\ADGroupScope.cs" />
+    <Compile Include="Group\ADGroupType.cs" />
+    <Compile Include="Group\GroupManager.cs" />
     <Compile Include="ManagerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OrganizationUnitManagement\ADOrganizationalUnit.cs" />
-    <Compile Include="OrganizationUnitManagement\OrganizationUnitManager.cs" />
-    <Compile Include="UserManagement\Account.cs" />
-    <Compile Include="UserManagement\AccountManager.cs" />
-    <Compile Include="UserManagement\PassResetUtil.cs" />
-    <Compile Include="UserManagement\SearchAccountCriteria.cs" />
+    <Compile Include="OrganizationUnit\ADOrganizationalUnit.cs" />
+    <Compile Include="OrganizationUnit\OrganizationUnitManager.cs" />
+    <Compile Include="User\Account.cs" />
+    <Compile Include="User\AccountManager.cs" />
+    <Compile Include="User\PassResetUtil.cs" />
+    <Compile Include="User\SearchAccountCriteria.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +154,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

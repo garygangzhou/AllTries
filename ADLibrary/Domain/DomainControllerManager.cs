@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Text.RegularExpressions;
 
-namespace GZ.ActiveDirectoryLibrary
+namespace GZ.ActiveDirectoryLibrary.Domain
 {
-    public class DomainController : ManagerBase
+    public class DomainControllerManager : ManagerBase
     {
-        private UserManagement.AccountManager _userManager;
-        private GroupManagement.GroupManager _groupManager;
-        private OrganizationUnitManagement.OrganizationUnitManager _organizationUnitManager;
+        private User.AccountManager _userManager;
+        private Group.GroupManager _groupManager;
+        private OrganizationUnit.OrganizationUnitManager _organizationUnitManager;
 
-        private DomainController()
+        private DomainControllerManager()
         {}
 
-        public DomainController(string domainControllerAddress, string domainName, string userName, string password)
+        public DomainControllerManager(string domainControllerAddress, string domainName, string userName, string password)
 
         {
             DomainControllerAddress = domainControllerAddress;
@@ -23,39 +23,39 @@ namespace GZ.ActiveDirectoryLibrary
             DomainName = domainName;
         }
 
-        public UserManagement.AccountManager AccountManager
+        public User.AccountManager AccountManager
         {
             get
             {
                 if (_userManager == default)
                 {
-                    _userManager = new UserManagement.AccountManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
+                    _userManager = new User.AccountManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
                 }
 
                 return _userManager;
             }
         }
         
-        public GroupManagement.GroupManager GroupManager
+        public Group.GroupManager GroupManager
         {
             get
             {
                 if (_groupManager == default)
                 {
-                    _groupManager = new GroupManagement.GroupManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
+                    _groupManager = new Group.GroupManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
                 }
 
                 return _groupManager;
             }
         }
   
-        public OrganizationUnitManagement.OrganizationUnitManager OrganizationalUnitManager
+        public OrganizationUnit.OrganizationUnitManager OrganizationalUnitManager
         {
             get
             {
                 if (_organizationUnitManager == default)
                 {
-                    _organizationUnitManager = new OrganizationUnitManagement.OrganizationUnitManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
+                    _organizationUnitManager = new OrganizationUnit.OrganizationUnitManager(DomainControllerAddress, DomainName, DomainControllerUserName, DomainControllerPassword);
                 }
 
                 return _organizationUnitManager;

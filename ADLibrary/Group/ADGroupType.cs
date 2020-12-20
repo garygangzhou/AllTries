@@ -1,5 +1,5 @@
 ﻿
-namespace GZ.ActiveDirectoryLibrary.GroupManagement
+namespace GZ.ActiveDirectoryLibrary.Group
 {   
     public enum ADGroupType
     {

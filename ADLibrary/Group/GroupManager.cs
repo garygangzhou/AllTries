@@ -2,7 +2,7 @@
 using System;
 using System.DirectoryServices;
 
-namespace GZ.ActiveDirectoryLibrary.GroupManagement
+namespace GZ.ActiveDirectoryLibrary.Group
 {   
     public sealed class GroupManager : ManagerBase
     {

@@ -8,7 +8,7 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using GZ.ActiveDirectoryLibrary.Exceptions;
 
-namespace GZ.ActiveDirectoryLibrary.UserManagement
+namespace GZ.ActiveDirectoryLibrary.User
 {
 
     public sealed class AccountManager : ManagerBase

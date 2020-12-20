@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
+namespace GZ.ActiveDirectoryLibrary.OrganizationUnit
 {
     public class ADOrganizationalUnit : ADObject
     {

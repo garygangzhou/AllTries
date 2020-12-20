@@ -1,5 +1,5 @@
 ﻿
-namespace GZ.ActiveDirectoryLibrary.UserManagement
+namespace GZ.ActiveDirectoryLibrary.User
 {    
     public struct SearchAccountCriteria
     {

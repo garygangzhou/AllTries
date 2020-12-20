@@ -1,7 +1,7 @@
 ﻿using System;
 using System.DirectoryServices;
 
-namespace GZ.ActiveDirectoryLibrary.OrganizationUnitManagement
+namespace GZ.ActiveDirectoryLibrary.OrganizationUnit
 {
     public sealed class OrganizationUnitManager : ManagerBase
     {

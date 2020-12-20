@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace GZ.ActiveDirectoryLibrary.GroupManagement
+namespace GZ.ActiveDirectoryLibrary.Group
 {
     /// <summary>
     /// ADGroup class inherit ADOBject. This class represents a group
