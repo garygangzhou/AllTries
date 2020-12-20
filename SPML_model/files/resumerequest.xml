@@ -1,3 +1,0 @@
-﻿<spml:resumeRequest xmlns:spml="urn:oasis:names:tc:SPML:2:0" executionMode="synchronous" requestID="528983" returnData="everything">
-	<spml:psoID ID="c996f3f1-19d3-4836-be09-7b8d98448695" targetID="ADDS"/>
-</spml:resumeRequest>
