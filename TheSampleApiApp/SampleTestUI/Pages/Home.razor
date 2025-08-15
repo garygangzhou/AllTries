@@ -1,0 +1,38 @@
+﻿@page "/"
+@using SampleTestUI.Models
+@inject HttpClient http
+
+<PageTitle>Courses</PageTitle>
+
+<h1>All Courses</h1>
+
+@if (courses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (courses.Count == 0)
+{
+    <p>No courses available.</p>
+}
+else
+{
+    @foreach (var course in courses)
+    {
+        <a href="@course.CourseUrl">
+            <img width="300" src="@course.CourseImage" />
+        </a>
+    }
+}
+
+@code{
+    private List<CourseModel>? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        courses = await http.GetFromJsonAsync<List<CourseModel>>("https://localhost:7107/courses");
+        
+    }
+
+}
+
+
